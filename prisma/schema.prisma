@@ -1,0 +1,42 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BusinessOwner {
+  id                   String    @id @default(uuid()) @db.Uuid
+  citizenship          String
+  identificationNumber String?   @unique
+  passportNumber       String?   @unique
+  otherNames           String
+  surname              String
+  Nationality          String?   @db.Uuid
+  phoneNumber          String
+  email                String    @unique
+  nationality          Location? @relation(fields: [Nationality], references: [id])
+  createdAt            DateTime  @default(now())
+}
+
+model BusinessDetails {
+  id               String    @id @default(uuid()) @db.Uuid
+  companyName      String    @unique
+  TinNumber        BigInt    @unique
+  RegistrationDate DateTime  @default(now())
+  bussinessAddress String
+  Address          String?   @db.Uuid
+  nationality      Location? @relation(fields: [Address], references: [id])
+  createdAt        DateTime  @default(now())
+}
+
+model Location {
+  id             String            @id @default(uuid()) @db.Uuid
+  address        String
+  businessOwner  BusinessOwner[]
+  businesDetails BusinessDetails[]
+  createdAt      DateTime          @default(now())
+}
