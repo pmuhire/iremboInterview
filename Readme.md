@@ -1,13 +1,16 @@
 
-# Shortener BE
-An express prisma node.js Typescript Postgress url Shortener
+# Irembo onboard Interview
+An express prisma node.js Typescript Postgress RICA Import permit
+
+## Frontend repo
+[FE](https://github.com/pmuhire/irembo.git){:target="_blank"}
 ## Installation
 
 Install my-project with npm
 
 ```bash
-  git clone https://github.com/pmuhire/shortener.git
-  cd shortener
+  git clone https://github.com/pmuhire/iremboInterview.git
+  cd iremboInterview
   npm install
   npx prisma 
 ```
