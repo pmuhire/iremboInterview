@@ -1,8 +1,10 @@
 import express, { Response, Request } from 'express';
 import { PrismaClient } from "@prisma/client"
-import router from './routes/user.routes';
+import detailsRouter from './routes/details';
 import owner from './routes/owner';
-import locationRouter from './routes/location';
+import productRouter from './routes/product';
+import importDetailsRouter from './routes/importDetails';
+import permitRouter from './routes/permit';
 
 export const prisma = new PrismaClient();
 
@@ -16,17 +18,18 @@ export async function main() {
         if (allowedOrigins.includes(origin)) {
             res.header('Access-Control-Allow-Origin', origin);
         }
-        // res.header('Access-Control-Allow-Origin', 'http://localhost:5173'); // Replace with your frontend URL
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         next();
     });
     app.use(express.json());
-    // app.use('/api/users', router);
     app.use('/api/owner', owner);
-    app.use("/api/location", locationRouter)
+    app.use("/api/details", detailsRouter)
+    app.use("/api/importDetails", importDetailsRouter)
+    app.use("/api/product", productRouter)
+    app.use("/api/permit", permitRouter)
     app.all("*", (req: Request, res: Response) => {
-        res.status(404).json({ error: `Route ${req.originalUrl} not found` });
+        res.status(404).json({ error: `Route not found` });
     });
 
     app.listen(port, () => {

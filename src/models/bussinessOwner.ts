@@ -8,7 +8,7 @@ export interface BussinessOwner extends Owner {
   passportNumber: string
   otherNames: string
   surname: string
-  Nationality: string
+  Address: string
   phoneNumber: string
   email: string
   createdAt: Date
@@ -16,7 +16,7 @@ export interface BussinessOwner extends Owner {
 
 export const ownerValidationSchema = Joi.object({
   citizenship: Joi.string().required(),
-  Nationality: Joi.string().required(),
+  Address: Joi.string().required(),
   surname: Joi.string().required(),
   otherNames: Joi.string().required(),
   identificationNumber: Joi.string().max(16).min(16),

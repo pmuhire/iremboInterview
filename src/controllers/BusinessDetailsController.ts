@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { emailer } from '../utils/nodemailer';
-import { mapBussinessOwnerToCustomModel, ownerValidationSchema } from '../models/bussinessOwner';
+import { detailsValidation } from '../models/businessDetails';
 
 const prisma = new PrismaClient();
 
@@ -9,57 +8,44 @@ class BusinnessDetailsController {
     async createBusinessDetails(req: Request, res: Response): Promise<void> {
         // console.log(req);
         const {
-            citizenship,
-            identificationNumber,
-            passportNumber,
-            otherNames,
-            surname,
-            Nationality,
-            phoneNumber,
-            email,
+            companyName,
+            TinNumber,
+            Address,
+            RegistrationDate,
+            businessType
         } = req.body;
 
         try {
-            await ownerValidationSchema.validateAsync({
-                identificationNumber,
-                passportNumber,
-                otherNames,
-                surname,
-                Nationality,
-                phoneNumber,
-                email,
-                citizenship
+            await detailsValidation.validateAsync({
+                companyName,
+                TinNumber,
+                Address,
+                RegistrationDate,
             });
-            const owner = await prisma.businessOwner.findFirst({
+            const details = await prisma.businessDetails.findFirst({
                 where: {
                     OR: [
-                        { identificationNumber },
-                        { passportNumber },
+                        { TinNumber },
+                        { companyName },
                     ],
                 },
             });
 
-            if (owner) {
-                res.json({ sucess: true, info: { ...owner } });
+            if (details) {
+                res.json({ sucess: true, info: { ...details } });
                 return;
             }
-
-
-            const createdOwner = await prisma.businessOwner.create({
+            const createdDetails = await prisma.businessDetails.create({
                 data: {
-                    citizenship,
-                    identificationNumber,
-                    passportNumber,
-                    otherNames,
-                    surname,
-                    Nationality,
-                    phoneNumber,
-                    email,
+                    companyName,
+                    TinNumber,
+                    Address,
+                    RegistrationDate,
+                    businessType
                 },
             });
-            console.log(createdOwner);
-            await emailer.notifyUserForSignup(createdOwner.email, createdOwner.surname);
-            res.json({ sucess: true, info: createdOwner });
+            console.log(createdDetails);
+            res.json({ sucess: true, info: createdDetails });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });
@@ -68,8 +54,8 @@ class BusinnessDetailsController {
     async getBusinnessDetails(req: Request, res: Response): Promise<void> {
         // console.log(req);
         try {
-            const owner = await prisma.businessOwner.findMany();
-            res.json(owner.map(mapBussinessOwnerToCustomModel));
+            const details = await prisma.businessDetails.findMany();
+            res.json(details);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Internal server error' });

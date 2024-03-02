@@ -14,7 +14,7 @@ class BusinessOwnerController {
             passportNumber,
             otherNames,
             surname,
-            Nationality,
+            Address,
             phoneNumber,
             email,
         } = req.body;
@@ -25,10 +25,10 @@ class BusinessOwnerController {
                 passportNumber,
                 otherNames,
                 surname,
-                Nationality,
+                Address,
                 phoneNumber,
                 email,
-                citizenship
+                citizenship,
             });
             const owner = await prisma.businessOwner.findFirst({
                 where: {
@@ -44,7 +44,6 @@ class BusinessOwnerController {
                 return;
             }
 
-
             const createdOwner = await prisma.businessOwner.create({
                 data: {
                     citizenship,
@@ -52,13 +51,13 @@ class BusinessOwnerController {
                     passportNumber,
                     otherNames,
                     surname,
-                    Nationality,
+                    Address,
                     phoneNumber,
                     email,
                 },
             });
             console.log(createdOwner);
-            await emailer.notifyUserForSignup(createdOwner.email, createdOwner.surname);
+            // await emailer.notifyUserForSignup(createdOwner.email, createdOwner.surname);
             res.json({ sucess: true, info: createdOwner });
         } catch (error) {
             console.error(error);

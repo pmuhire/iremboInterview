@@ -9,34 +9,81 @@ datasource db {
 }
 
 model BusinessOwner {
-  id                   String    @id @default(uuid()) @db.Uuid
+  id                   String            @id @default(uuid()) @db.Uuid
   citizenship          String
-  identificationNumber String?   @unique
-  passportNumber       String?   @unique
+  identificationNumber String?           @unique
+  passportNumber       String?           @unique
   otherNames           String
   surname              String
-  Nationality          String?   @db.Uuid
+  Address              String
   phoneNumber          String
-  email                String    @unique
-  nationality          Location? @relation(fields: [Nationality], references: [id])
-  createdAt            DateTime  @default(now())
+  email                String            @unique
+  createdAt            DateTime          @default(now())
+  businessDetails      BusinessDetails[]
+  product              product[]
+  importPermit         importPermit[]
 }
 
 model BusinessDetails {
-  id               String    @id @default(uuid()) @db.Uuid
-  companyName      String    @unique
-  TinNumber        BigInt    @unique
-  RegistrationDate DateTime  @default(now())
-  bussinessAddress String
-  Address          String?   @db.Uuid
-  nationality      Location? @relation(fields: [Address], references: [id])
-  createdAt        DateTime  @default(now())
+  id               String         @id @default(uuid()) @db.Uuid
+  companyName      String         @unique
+  TinNumber        BigInt         @unique
+  businessType     String
+  RegistrationDate DateTime       @default(now())
+  Address          String
+  businnessOwner   String?        @db.Uuid
+  Owner            BusinessOwner? @relation(fields: [businnessOwner], references: [id])
+  createdAt        DateTime       @default(now())
+  importPermit     importPermit[]
 }
 
-model Location {
-  id             String            @id @default(uuid()) @db.Uuid
-  address        String
-  businessOwner  BusinessOwner[]
-  businesDetails BusinessDetails[]
-  createdAt      DateTime          @default(now())
+model product {
+  id                 String          @id @default(uuid()) @db.Uuid
+  productName        String
+  productCategory    String
+  productDescription String
+  unitOfMeasurement  String
+  businessOwner      String          @db.Uuid
+  Owner              BusinessOwner?  @relation(fields: [businessOwner], references: [id])
+  quantity           Int
+  createdAt          DateTime        @default(now())
+  importDetails      importDetails[]
+}
+
+model importDetails {
+  id      String   @id @default(uuid()) @db.Uuid
+  purpose String
+  details String
+  product String   @db.Uuid
+  Product product? @relation(fields: [product], references: [id])
+}
+
+model importPermit {
+  id              String           @id @default(uuid()) @db.Uuid
+  owner           String           @db.Uuid
+  business        String           @db.Uuid
+  businessOwner   BusinessOwner?   @relation(fields: [owner], references: [id])
+  businessDetails BusinessDetails? @relation(fields: [business], references: [id])
+}
+
+model permit {
+  id                   Int      @id @default(autoincrement())
+  citizenship          String   @db.VarChar(255)
+  nationalId           String?  @unique
+  passportId           String?  @unique
+  email                String   @db.VarChar(255)
+  surname              String
+  othernames           String
+  phone                String   @db.VarChar(255)
+  company              String   @db.VarChar(255)
+  TIN                  String   @db.VarChar(255)
+  date                 DateTime
+  province             String   @db.VarChar(255)
+  businessType         String   @db.VarChar(255)
+  purposeOfImportation String   @db.VarChar(255)
+  productCategory      String   @db.VarChar(255)
+  weight               String   @db.VarChar(255)
+  unitOfMeasurement    String   @db.VarChar(255)
+  qty                  Int
+  desc                 String   @db.VarChar(255)
 }
