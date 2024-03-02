@@ -63,8 +63,8 @@ export const emailConfirmation = (requestBody) => {
       <p><em>Applicant citizenship:</em> ${requestBody.citizenship}</p>
       <p><em>Phone number:</em> ${requestBody.phone}</p>
       <p><em>Email address:</em> ${requestBody.email}</p>
-      <p><em>National ID:</em> ${requestBody.passportId}</p>
-      <p><em>Passport ID:</em> ${requestBody.email}</p>
+      <p><em>National ID:</em> ${requestBody.nationalId}</p>
+      <p><em>Passport ID:</em> ${requestBody.passportId}</p>
       <p><em>Business owner address:</em> ${requestBody.province}</p>
     
       <h3>Business details</h3>
